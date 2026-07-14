@@ -1,0 +1,373 @@
+{
+  "id": "tomb_room_01_route_v08",
+  "version": 8,
+  "status": "INTERNAL_LONG_MAP_REBUILD",
+  "transition_library": "res://contracts/depth_transition_library_v01.json",
+  "asset_root": "res://assets/backgrounds",
+  "background_file": "papyrus_archive_long_v01_3840x720.png",
+  "runtime_size": [3840, 720],
+  "world_metrics": {
+    "pixels_per_meter": 80.0,
+    "route_to_art_offset": [0, 0],
+    "reference": "Alice standing height 140 px equals approximately 1.75 m"
+  },
+  "hero_standing_height": 140,
+  "floor_snap": 8,
+  "common_world_layer": 1,
+  "lanes": [
+    {
+      "id": "near_front",
+      "lane": 0,
+      "scale": 1.0,
+      "z_index": 2,
+      "collision_layer": 2
+    },
+    {
+      "id": "middle_main",
+      "lane": 1,
+      "scale": 0.88,
+      "z_index": 0,
+      "collision_layer": 4
+    },
+    {
+      "id": "far_gallery",
+      "lane": 2,
+      "scale": 0.76,
+      "z_index": -2,
+      "collision_layer": 8
+    }
+  ],
+  "spawn": {
+    "lane": "near_front",
+    "position": [110, 580]
+  },
+  "objective": {
+    "id": "papyrus",
+    "lane": "far_gallery",
+    "position": [3500, 270],
+    "pickup_half_extents": [85, 75]
+  },
+  "proof_a_disabled_nodes": ["ShootTarget"],
+  "enemy_spawns": [
+    {
+      "node": "Zombie1",
+      "display_name": "Tomb Mummy",
+      "lane": "near_front",
+      "position": [2300, 580],
+      "patrol_left": 2280,
+      "patrol_right": 2780,
+      "cover_level": 0,
+      "motion_class": "hobble",
+      "patrol_speed": 40,
+      "max_hp": 15,
+      "armour_class": 10,
+      "visual_height_meters": 1.82,
+      "ranged_attack": {
+        "rules_profile": "mummy_thrown_stone_rurk_v01",
+        "kind": "thrown_stone",
+        "damage": 1,
+        "range_meters": 16,
+        "cooldown_seconds": 4.2,
+        "initial_delay_seconds": 1.4,
+        "projectile_speed": 360
+      }
+    },
+    {
+      "node": "Cultist1",
+      "display_name": "Cult Adept",
+      "lane": "far_gallery",
+      "position": [2700, 180],
+      "patrol_left": 2440,
+      "patrol_right": 2820,
+      "cover_level": 0,
+      "motion_class": "walk",
+      "patrol_speed": 30,
+      "max_hp": 10,
+      "armour_class": 5,
+      "visual_height_meters": 1.78,
+      "ranged_attack": {
+        "rules_profile": "cult_fireball_rurk_v01",
+        "kind": "fireball",
+        "damage": 2,
+        "range_meters": 22,
+        "cooldown_seconds": 8.0,
+        "initial_delay_seconds": 2.3,
+        "projectile_speed": 300
+      }
+    }
+  ],
+  "combat_obstacles": [
+    {
+      "id": "near_central_rubble_core",
+      "rect": [2410, 510, 90, 70],
+      "depth_span": ["near_front", "near_front"],
+      "blocks": ["instant_ballistic", "travelling_magic", "thrown_physical"],
+      "material": "stone",
+      "visible_art_contract": "solid high core of the painted central rubble pile; only a head remains exposed behind it"
+    },
+    {
+      "id": "near_right_rubble_core",
+      "rect": [3500, 530, 130, 50],
+      "depth_span": ["near_front", "near_front"],
+      "blocks": ["instant_ballistic", "travelling_magic", "thrown_physical"],
+      "material": "stone",
+      "visible_art_contract": "solid core of the painted right-hand rubble pile on the near floor"
+    },
+    {
+      "id": "middle_torch_bench",
+      "rect": [2290, 330, 200, 60],
+      "depth_span": ["middle_main", "middle_main"],
+      "blocks": ["instant_ballistic", "travelling_magic", "thrown_physical"],
+      "material": "stone",
+      "visible_art_contract": "painted stone bench beneath the right middle-gallery torch"
+    },
+    {
+      "id": "far_low_plinth",
+      "rect": [1830, 145, 150, 35],
+      "depth_span": ["far_gallery", "far_gallery"],
+      "blocks": ["instant_ballistic", "travelling_magic", "thrown_physical"],
+      "material": "stone",
+      "visible_art_contract": "painted low stone plinth on the upper gallery"
+    }
+  ],
+  "cover_zones": [
+    {
+      "id": "near_central_rubble_cover",
+      "rect": [2380, 495, 120, 85],
+      "lane": "near_front",
+      "cover_level": 3,
+      "obstacle_id": "near_central_rubble_core",
+      "visible_art_contract": "painted central rubble exposes only the target's head from the opposite side"
+    },
+    {
+      "id": "near_right_rubble_cover",
+      "rect": [3440, 515, 240, 65],
+      "lane": "near_front",
+      "cover_level": 1,
+      "obstacle_id": "near_right_rubble_core",
+      "visible_art_contract": "painted right rubble provides knee-high cover"
+    },
+    {
+      "id": "middle_torch_bench_cover",
+      "rect": [2290, 330, 200, 60],
+      "lane": "middle_main",
+      "cover_level": 2,
+      "obstacle_id": "middle_torch_bench",
+      "visible_art_contract": "painted middle-gallery bench provides waist-high cover"
+    },
+    {
+      "id": "far_low_plinth_cover",
+      "rect": [1830, 145, 150, 35],
+      "lane": "far_gallery",
+      "cover_level": 1,
+      "obstacle_id": "far_low_plinth",
+      "visible_art_contract": "painted upper-gallery plinth provides knee-high cover"
+    }
+  ],
+  "collision_surfaces": [
+    {
+      "id": "near_floor",
+      "lane": "near_front",
+      "elevation_rank": 0,
+      "points": [[0, 580], [2860, 580], [2960, 620], [3300, 620], [3400, 580], [3840, 580]],
+      "visible_art_contract": "continuous painted foreground floor and visible center-right steps"
+    },
+    {
+      "id": "middle_left",
+      "lane": "middle_main",
+      "elevation_rank": 1,
+      "points": [[0, 390], [1580, 390]],
+      "visible_art_contract": "painted middle gallery ending at the visible archive doorway gap"
+    },
+    {
+      "id": "middle_unstable_bridge",
+      "lane": "middle_main",
+      "elevation_rank": 1,
+      "traversal_mode": "unstable_bridge",
+      "speed_multiplier": 0.5,
+      "points": [[1580, 390], [1900, 390]],
+      "visible_art_contract": "narrow painted bridge across the central middle-level opening; balance traversal required"
+    },
+    {
+      "id": "middle_right",
+      "lane": "middle_main",
+      "elevation_rank": 1,
+      "points": [[1900, 390], [2880, 390]],
+      "visible_art_contract": "painted middle gallery after the visible archive doorway gap"
+    },
+    {
+      "id": "middle_lower_catch",
+      "lane": "middle_main",
+      "elevation_rank": 0,
+      "points": [[0, 580], [2860, 580], [2960, 620], [3300, 620], [3400, 580], [3840, 580]],
+      "visible_art_contract": "painted lower floor catches falls within the middle depth plane without changing scale"
+    },
+    {
+      "id": "far_main",
+      "lane": "far_gallery",
+      "elevation_rank": 2,
+      "points": [[0, 180], [2860, 180], [3000, 225], [3140, 270], [3760, 270]],
+      "visible_art_contract": "continuous painted rear gallery, visible shrine stairs and supported papyrus landing"
+    },
+    {
+      "id": "far_middle_left",
+      "lane": "far_gallery",
+      "elevation_rank": 1,
+      "points": [[0, 390], [1580, 390]],
+      "visible_art_contract": "painted middle-left gallery catches the first fall below the far gallery"
+    },
+    {
+      "id": "far_middle_right",
+      "lane": "far_gallery",
+      "elevation_rank": 1,
+      "points": [[1900, 390], [2880, 390]],
+      "visible_art_contract": "painted middle-right gallery catches the first fall below the far gallery"
+    },
+    {
+      "id": "far_lower_catch",
+      "lane": "far_gallery",
+      "elevation_rank": 0,
+      "points": [[0, 580], [2860, 580], [2960, 620], [3300, 620], [3400, 580], [3840, 580]],
+      "visible_art_contract": "painted lower floor is the final fall catch within the far depth plane"
+    }
+  ],
+  "transitions": [
+    {
+      "id": "stairs_left_near_to_middle",
+      "reverse_transition_id": "stairs_left_middle_to_near",
+      "from_lane": "near_front",
+      "to_lane": "middle_main",
+      "transition_type": "stair",
+      "transition_family": "depth_stairs",
+      "transition_direction": "in",
+      "height_direction": "up",
+      "animation_clip": "depth_stairs_in_up_candidate",
+      "duration": 1.9,
+      "lane_handoff_t": 0.56,
+      "trigger_polygon": [[700, 540], [900, 540], [900, 615], [700, 615]],
+      "target_position": [250, 390],
+      "path_points": [[800, 580], [650, 528], [500, 476], [365, 430], [250, 390]],
+      "visible_art_contract": "wide painted left staircase, lower landing to upper landing"
+    },
+    {
+      "id": "stairs_left_middle_to_near",
+      "reverse_transition_id": "stairs_left_near_to_middle",
+      "from_lane": "middle_main",
+      "to_lane": "near_front",
+      "transition_type": "stair",
+      "transition_family": "depth_stairs",
+      "transition_direction": "out",
+      "height_direction": "down",
+      "animation_clip": "depth_stairs_out_down_candidate",
+      "duration": 1.9,
+      "lane_handoff_t": 0.44,
+      "trigger_polygon": [[100, 370], [470, 370], [470, 450], [100, 450]],
+      "target_position": [800, 580],
+      "path_points": [[250, 390], [365, 430], [500, 476], [650, 528], [800, 580]],
+      "visible_art_contract": "wide painted left staircase, upper landing to lower landing"
+    },
+    {
+      "id": "ladder_middle_to_far",
+      "reverse_transition_id": "ladder_far_to_middle",
+      "from_lane": "middle_main",
+      "to_lane": "far_gallery",
+      "transition_type": "ladder",
+      "transition_family": "depth_ladder",
+      "transition_direction": "in",
+      "height_direction": "up",
+      "animation_clip": "depth_ladder_in_up_candidate",
+      "duration": 1.35,
+      "lane_handoff_t": 0.55,
+      "trigger_polygon": [[2180, 370], [2320, 370], [2320, 450], [2180, 450]],
+      "target_position": [2250, 180],
+      "path_points": [[2250, 390], [2250, 320], [2250, 250], [2250, 180]],
+      "visible_art_contract": "complete vertical painted ladder with clear lower and upper landings"
+    },
+    {
+      "id": "ladder_far_to_middle",
+      "reverse_transition_id": "ladder_middle_to_far",
+      "from_lane": "far_gallery",
+      "to_lane": "middle_main",
+      "transition_type": "ladder",
+      "transition_family": "depth_ladder",
+      "transition_direction": "out",
+      "height_direction": "down",
+      "animation_clip": "depth_ladder_out_down_candidate",
+      "duration": 1.35,
+      "lane_handoff_t": 0.45,
+      "trigger_polygon": [[2180, 140], [2320, 140], [2320, 220], [2180, 220]],
+      "target_position": [2250, 390],
+      "path_points": [[2250, 180], [2250, 250], [2250, 320], [2250, 390]],
+      "visible_art_contract": "complete vertical painted ladder with clear upper and lower landings"
+    },
+    {
+      "id": "stairs_right_middle_to_far",
+      "reverse_transition_id": "stairs_right_far_to_middle",
+      "from_lane": "middle_main",
+      "to_lane": "far_gallery",
+      "transition_type": "stair",
+      "transition_family": "depth_stairs",
+      "transition_direction": "in",
+      "height_direction": "up",
+      "animation_clip": "depth_stairs_in_up_candidate",
+      "duration": 1.5,
+      "lane_handoff_t": 0.55,
+      "trigger_polygon": [[2810, 370], [2940, 370], [2940, 450], [2810, 450]],
+      "target_position": [3200, 270],
+      "path_points": [[2880, 390], [2960, 360], [3040, 330], [3120, 300], [3200, 270]],
+      "visible_art_contract": "painted right staircase from middle gallery to supported shrine landing"
+    },
+    {
+      "id": "stairs_right_far_to_middle",
+      "reverse_transition_id": "stairs_right_middle_to_far",
+      "from_lane": "far_gallery",
+      "to_lane": "middle_main",
+      "transition_type": "stair",
+      "transition_family": "depth_stairs",
+      "transition_direction": "out",
+      "height_direction": "down",
+      "animation_clip": "depth_stairs_out_down_candidate",
+      "duration": 1.5,
+      "lane_handoff_t": 0.45,
+      "trigger_polygon": [[3140, 230], [3270, 230], [3270, 310], [3140, 310]],
+      "target_position": [2880, 390],
+      "path_points": [[3200, 270], [3120, 300], [3040, 330], [2960, 360], [2880, 390]],
+      "visible_art_contract": "painted right staircase from supported shrine landing to middle gallery"
+    },
+    {
+      "id": "archive_door_near_to_middle",
+      "reverse_transition_id": "archive_door_middle_to_near",
+      "from_lane": "near_front",
+      "to_lane": "middle_main",
+      "transition_type": "step",
+      "transition_family": "depth_walk",
+      "transition_direction": "in",
+      "height_direction": "level",
+      "animation_clip": "depth_walk_in_level_candidate",
+      "duration": 1.25,
+      "lane_handoff_t": 0.6,
+      "trigger_polygon": [[1620, 535], [1810, 535], [1810, 615], [1620, 615]],
+      "target_position": [1950, 390],
+      "path_points": [[1710, 580], [1710, 520], [1760, 462], [1850, 420], [1950, 390]],
+      "visible_art_contract": "open central archive passage carries Alice away from camera to the supported middle-right gallery"
+    },
+    {
+      "id": "archive_door_middle_to_near",
+      "reverse_transition_id": "archive_door_near_to_middle",
+      "from_lane": "middle_main",
+      "to_lane": "near_front",
+      "transition_type": "step",
+      "transition_family": "depth_walk",
+      "transition_direction": "out",
+      "height_direction": "level",
+      "animation_clip": "depth_walk_out_level_candidate",
+      "duration": 1.25,
+      "lane_handoff_t": 0.4,
+      "trigger_polygon": [[1880, 370], [2050, 370], [2050, 450], [1880, 450]],
+      "target_position": [1710, 580],
+      "path_points": [[1950, 390], [1850, 420], [1760, 462], [1710, 520], [1710, 580]],
+      "visible_art_contract": "open central archive passage carries Alice toward camera to the supported near floor"
+    }
+  ],
+  "occlusion_masks": []
+}

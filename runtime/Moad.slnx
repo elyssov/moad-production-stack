@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Moad.Engine.Tests/Moad.Engine.Tests.csproj" />
+  <Project Path="Moad.Engine/Moad.Engine.csproj" />
+  <Project Path="Moad.Runtime/Moad.Runtime.csproj" />
+</Solution>

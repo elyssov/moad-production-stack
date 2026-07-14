@@ -1,0 +1,107 @@
+{
+  "format": "moad-level-source",
+  "schemaVersion": 1,
+  "id": "semi_abandoned_tomb_proof",
+  "title": "Semi-Abandoned Tomb / Build Week Proof",
+  "pixelsPerMeter": 80,
+  "background": {
+    "fileName": "semi_abandoned_tomb.png",
+    "dataUrl": "",
+    "width": 3840,
+    "height": 720
+  },
+  "depths": [
+    { "id": "near", "runtimeId": "near_front", "label": "Near", "color": "#f2c94c", "scale": 1, "zIndex": 2 },
+    { "id": "middle", "runtimeId": "middle_main", "label": "Middle", "color": "#42d17b", "scale": 0.88, "zIndex": 0 },
+    { "id": "far", "runtimeId": "far_gallery", "label": "Far", "color": "#48a7ff", "scale": 0.76, "zIndex": -2 }
+  ],
+  "supports": [
+    { "id": "near_floor", "depth": "near", "traversal": "stable", "speedMultiplier": 1, "placeholder": false, "points": [
+      { "x": 0, "y": 635, "heightMeters": 0 }, { "x": 3840, "y": 635, "heightMeters": 0 }
+    ]},
+    { "id": "middle_west", "depth": "middle", "traversal": "stable", "speedMultiplier": 1, "placeholder": false, "points": [
+      { "x": 255, "y": 505, "heightMeters": 2 }, { "x": 1060, "y": 505, "heightMeters": 2 }
+    ]},
+    { "id": "middle_ramp", "depth": "middle", "traversal": "stable", "speedMultiplier": 0.85, "placeholder": false, "points": [
+      { "x": 1060, "y": 505, "heightMeters": 2 }, { "x": 1370, "y": 355, "heightMeters": 3.8 }, { "x": 1580, "y": 355, "heightMeters": 3.8 }
+    ]},
+    { "id": "middle_central", "depth": "middle", "traversal": "stable", "speedMultiplier": 1, "placeholder": false, "points": [
+      { "x": 1885, "y": 530, "heightMeters": 1.6 }, { "x": 2600, "y": 530, "heightMeters": 1.6 }
+    ]},
+    { "id": "middle_east", "depth": "middle", "traversal": "stable", "speedMultiplier": 1, "placeholder": false, "points": [
+      { "x": 2760, "y": 480, "heightMeters": 2.5 }, { "x": 3570, "y": 480, "heightMeters": 2.5 }
+    ]},
+    { "id": "middle_upper_west", "depth": "middle", "traversal": "stable", "speedMultiplier": 1, "placeholder": false, "points": [
+      { "x": 260, "y": 213, "heightMeters": 6 }, { "x": 1500, "y": 213, "heightMeters": 6 }
+    ]},
+    { "id": "middle_upper_east", "depth": "middle", "traversal": "stable", "speedMultiplier": 1, "placeholder": false, "points": [
+      { "x": 2450, "y": 190, "heightMeters": 6.4 }, { "x": 3830, "y": 190, "heightMeters": 6.4 }
+    ]},
+    { "id": "far_west_gallery", "depth": "far", "traversal": "stable", "speedMultiplier": 1, "placeholder": false, "points": [
+      { "x": 65, "y": 175, "heightMeters": 8 }, { "x": 860, "y": 175, "heightMeters": 8 }
+    ]},
+    { "id": "far_central_gallery", "depth": "far", "traversal": "stable", "speedMultiplier": 1, "placeholder": false, "points": [
+      { "x": 1200, "y": 150, "heightMeters": 8.5 }, { "x": 1950, "y": 150, "heightMeters": 8.5 }
+    ]},
+    { "id": "far_east_gallery", "depth": "far", "traversal": "stable", "speedMultiplier": 1, "placeholder": false, "points": [
+      { "x": 2240, "y": 145, "heightMeters": 8.5 }, { "x": 3430, "y": 145, "heightMeters": 8.5 }
+    ]}
+  ],
+  "transitions": [
+    { "id": "west_stone_steps", "fromSupportId": "near_floor", "toSupportId": "middle_west", "fromDepth": "near", "toDepth": "middle", "fromHeight": 0, "toHeight": 2, "type": "steps", "bidirectional": true, "duration": 2.2, "triggerRadius": 65, "placeholder": false, "path": [
+      { "x": 145, "y": 635 }, { "x": 205, "y": 575 }, { "x": 255, "y": 505 }
+    ]},
+    { "id": "west_rung_ladder", "fromSupportId": "middle_west", "toSupportId": "middle_upper_west", "fromDepth": "middle", "toDepth": "middle", "fromHeight": 2, "toHeight": 6, "type": "ladder", "bidirectional": true, "duration": 3.4, "triggerRadius": 55, "placeholder": false, "path": [
+      { "x": 690, "y": 505 }, { "x": 690, "y": 360 }, { "x": 690, "y": 213 }
+    ]},
+    { "id": "central_depth_walk", "fromSupportId": "middle_ramp", "toSupportId": "far_central_gallery", "fromDepth": "middle", "toDepth": "far", "fromHeight": 3.8, "toHeight": 8.5, "type": "depth_walk", "bidirectional": true, "duration": 2.8, "triggerRadius": 65, "placeholder": false, "path": [
+      { "x": 1510, "y": 355 }, { "x": 1600, "y": 285 }, { "x": 1700, "y": 220 }, { "x": 1810, "y": 150 }
+    ]},
+    { "id": "central_unstable_bridge", "fromSupportId": "middle_upper_west", "toSupportId": "middle_upper_east", "fromDepth": "middle", "toDepth": "middle", "fromHeight": 6, "toHeight": 6.4, "type": "rope", "bidirectional": true, "duration": 4.2, "triggerRadius": 70, "placeholder": false, "path": [
+      { "x": 1500, "y": 213 }, { "x": 1780, "y": 235 }, { "x": 2140, "y": 228 }, { "x": 2450, "y": 190 }
+    ]},
+    { "id": "east_stone_steps", "fromSupportId": "middle_east", "toSupportId": "middle_upper_east", "fromDepth": "middle", "toDepth": "middle", "fromHeight": 2.5, "toHeight": 6.4, "type": "steps", "bidirectional": true, "duration": 3, "triggerRadius": 65, "placeholder": false, "path": [
+      { "x": 3040, "y": 480 }, { "x": 3150, "y": 390 }, { "x": 3260, "y": 290 }, { "x": 3370, "y": 190 }
+    ]},
+    { "id": "east_lift", "fromSupportId": "near_floor", "toSupportId": "far_east_gallery", "fromDepth": "near", "toDepth": "far", "fromHeight": 0, "toHeight": 8.5, "type": "lift", "bidirectional": true, "duration": 5, "triggerRadius": 80, "placeholder": false, "path": [
+      { "x": 3590, "y": 635 }, { "x": 3590, "y": 420 }, { "x": 3550, "y": 260 }, { "x": 3430, "y": 145 }
+    ]}
+  ],
+  "events": [
+    { "id": "event_sunshaft", "eventId": "TOMB_LIGHTSHAFT_001", "depth": "far", "heightMin": 7.5, "heightMax": 9.5, "activation": "enter", "mode": "once", "enabled": true, "points": [
+      { "x": 780, "y": 40 }, { "x": 1040, "y": 40 }, { "x": 1160, "y": 280 }, { "x": 650, "y": 280 }
+    ]},
+    { "id": "event_sarcophagus", "eventId": "SARCOPHAGUS_WARNING_014", "depth": "middle", "heightMin": 1.5, "heightMax": 3, "activation": "enter", "mode": "once", "enabled": true, "points": [
+      { "x": 2850, "y": 390 }, { "x": 3160, "y": 390 }, { "x": 3160, "y": 560 }, { "x": 2850, "y": 560 }
+    ]}
+  ],
+  "hazards": [
+    { "id": "central_flooded_pit", "depth": "near", "heightMin": -8, "heightMax": 0, "hazardType": "pit", "damage": 999, "respawnId": "player_spawn", "points": [
+      { "x": 1130, "y": 565 }, { "x": 1880, "y": 565 }, { "x": 1880, "y": 710 }, { "x": 1130, "y": 710 }
+    ]},
+    { "id": "east_flooded_pit", "depth": "near", "heightMin": -8, "heightMax": 0, "hazardType": "pit", "damage": 999, "respawnId": "player_spawn", "points": [
+      { "x": 2570, "y": 560 }, { "x": 3020, "y": 560 }, { "x": 3020, "y": 710 }, { "x": 2570, "y": 710 }
+    ]}
+  ],
+  "obstacles": [
+    { "id": "anubis_statue", "depth": "middle", "heightMin": 0, "heightMax": 5.5, "material": "stone", "blocksMovement": true, "blocksBallistics": true, "blocksMagic": false, "blocksThrown": true, "coverLevel": 3, "points": [
+      { "x": 3140, "y": 300 }, { "x": 3430, "y": 300 }, { "x": 3470, "y": 630 }, { "x": 3090, "y": 630 }
+    ]}
+  ],
+  "occluders": [
+    { "id": "west_foreground_pillar", "depth": "near", "heightMin": 0, "heightMax": 9, "opacity": 1, "points": [
+      { "x": 0, "y": 0 }, { "x": 135, "y": 0 }, { "x": 210, "y": 720 }, { "x": 0, "y": 720 }
+    ]},
+    { "id": "east_anubis_foreground", "depth": "near", "heightMin": 0, "heightMax": 8, "opacity": 1, "points": [
+      { "x": 3170, "y": 280 }, { "x": 3430, "y": 280 }, { "x": 3500, "y": 720 }, { "x": 3050, "y": 720 }
+    ]}
+  ],
+  "enemies": [
+    { "id": "mummy_west", "archetype": "tomb_mummy", "depth": "middle", "heightMeters": 2, "x": 820, "y": 485, "patrolLeft": 510, "patrolRight": 1020, "placeholder": false },
+    { "id": "cultist_central", "archetype": "fire_cultist", "depth": "far", "heightMeters": 8.5, "x": 1730, "y": 130, "patrolLeft": 1320, "patrolRight": 1910, "placeholder": false },
+    { "id": "mummy_east", "archetype": "tomb_mummy", "depth": "middle", "heightMeters": 2.5, "x": 2860, "y": 460, "patrolLeft": 2780, "patrolRight": 3070, "placeholder": false }
+  ],
+  "spawns": [
+    { "id": "player_spawn", "kind": "player", "depth": "near", "heightMeters": 0, "x": 120, "y": 615 }
+  ]
+}

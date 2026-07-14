@@ -1,0 +1,36 @@
+name: Verify production stack
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  editor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/level-editor/package-lock.json
+      - name: Verify visual editor
+        working-directory: apps/level-editor
+        run: |
+          npm ci
+          npm run demo:build
+          npm test
+          npm run lint
+          npm run build
+
+  runtime:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Verify engine contract
+        run: dotnet run --project runtime/Moad.Engine.Tests/Moad.Engine.Tests.csproj
+      - name: Build Windows runtime
+        run: dotnet build runtime/Moad.Runtime/Moad.Runtime.csproj --configuration Release

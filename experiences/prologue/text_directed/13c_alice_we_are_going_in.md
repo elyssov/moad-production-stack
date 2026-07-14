@@ -1,0 +1,17 @@
+# Frame 13C - Final Alice Line
+
+## Speaker
+Alice
+
+## Director Notes
+Voice actor: Alice / Lady A. Compton.
+Performance: English aristocrat with warmth, intelligence, and private diary intimacy. Clear cultivated speech, elegant but alive. She is not fragile; she is tender and dangerous when pushed.
+Pacing: slightly more fluid than Eugene, lyrical but not slow. Let the thought breathe.
+Emotional rule: allow visible feeling, but keep the discipline of a woman raised to control herself in public.
+
+Scene emotion: very quiet, final, no tremble
+
+Short final handwritten line. Do not overact.
+
+## Voiceover Text
+We are going in.

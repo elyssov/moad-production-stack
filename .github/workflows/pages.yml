@@ -1,0 +1,61 @@
+name: Deploy production stack to Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/level-editor/package-lock.json
+
+      - name: Build level editor
+        working-directory: apps/level-editor
+        run: |
+          npm ci
+          npm run demo:build
+          npm test
+          npm run lint
+          npm run build -- --base /moad-production-stack/editor/
+
+      - name: Assemble Pages artifact
+        run: |
+          mkdir -p _site/editor _site/prologue _site/novella
+          cp -R site/. _site/
+          cp -R apps/level-editor/dist/. _site/editor/
+          cp -R experiences/prologue/. _site/prologue/
+          cp novella/*.png novella/*.pdf _site/novella/
+          touch _site/.nojekyll
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
