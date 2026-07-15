@@ -171,6 +171,15 @@ h1 { margin: 0; max-width: 730px; font-size: clamp(44px, 7vw, 96px); font-weight
 .novella-cover img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
 .novella-copy { align-self: center; max-width: 800px; padding: 90px 9vw; }
 .pullquote { color: var(--gold-bright); font-size: clamp(26px, 3vw, 40px); line-height: 1.2; }
+.campaign-callout {
+  margin-top: 52px;
+  padding: 32px;
+  border: 1px solid var(--line);
+  background: linear-gradient(135deg, rgba(200, 164, 92, .12), rgba(8, 8, 7, .55));
+}
+.campaign-callout h3 { margin: 0; font-size: clamp(22px, 2.2vw, 31px); font-weight: 500; line-height: 1.22; }
+.campaign-callout > p:not(.eyebrow) { margin: 17px 0 0; color: #cfc5b1; }
+.campaign-callout .button { margin-top: 24px; }
 
 .makers { background: #12100d; }
 .maker-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
@@ -205,6 +214,7 @@ footer a { color: var(--gold-bright); }
   .feature, .prologue-feature, .novella { grid-template-columns: 1fr; }
   .feature-media { min-height: 55vw; }
   .feature-copy, .novella-copy { padding: 70px 24px; }
+  .campaign-callout { padding: 26px; }
   .prologue-feature .feature-copy { order: 2; }
   .filmstrip { order: 1; min-height: auto; grid-template-columns: 1fr 1fr; }
   .filmstrip img { height: 280px; min-height: 0; }
