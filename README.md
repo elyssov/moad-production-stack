@@ -9,7 +9,9 @@
 [Open the project site](https://elyssov.github.io/moad-production-stack/) ·
 [Launch the visual editor](https://elyssov.github.io/moad-production-stack/editor/) ·
 [Watch the prologue](https://elyssov.github.io/moad-production-stack/prologue/) ·
-[Read the novella](https://elyssov.github.io/moad-production-stack/novella/Mystery_of_Ancient_Darkness_INITIUM_Illustrated_Novella.pdf)
+[Read the novella](https://elyssov.github.io/moad-production-stack/novella/Mystery_of_Ancient_Darkness_INITIUM_Illustrated_Novella.pdf) ·
+[Join on Boosty](https://boosty.to/elyssovsky) ·
+[Support once on Ko-fi](https://ko-fi.com/misfitssoftware)
 
 ## Why this exists
 

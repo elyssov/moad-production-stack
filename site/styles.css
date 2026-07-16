@@ -180,6 +180,8 @@ h1 { margin: 0; max-width: 730px; font-size: clamp(44px, 7vw, 96px); font-weight
 .campaign-callout h3 { margin: 0; font-size: clamp(22px, 2.2vw, 31px); font-weight: 500; line-height: 1.22; }
 .campaign-callout > p:not(.eyebrow) { margin: 17px 0 0; color: #cfc5b1; }
 .campaign-callout .button { margin-top: 24px; }
+.campaign-callout .support-alternative { color: var(--muted); font-size: 17px; }
+.support-alternative a { color: var(--gold-bright); text-underline-offset: 4px; }
 
 .makers { background: #12100d; }
 .maker-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 50px; }
