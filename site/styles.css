@@ -148,7 +148,7 @@ h1 { margin: 0; max-width: 730px; font-size: clamp(44px, 7vw, 96px); font-weight
   background: var(--coal);
 }
 .feature-media { min-height: 650px; overflow: hidden; background: #060605; }
-.feature-media img { width: 100%; height: 100%; object-fit: cover; object-position: 55% center; }
+.feature-media img { width: 100%; height: 100%; object-fit: cover; object-position: left center; }
 .feature-copy { align-self: center; padding: 88px clamp(35px, 6vw, 96px); }
 .feature-copy > p:not(.eyebrow) { color: #cfc5b1; }
 .capabilities { margin: 34px 0 0; padding: 0; list-style: none; border-top: 1px solid var(--line); }
@@ -157,8 +157,8 @@ h1 { margin: 0; max-width: 730px; font-size: clamp(44px, 7vw, 96px); font-weight
 .capabilities span { color: var(--muted); }
 
 .prologue-feature { grid-template-columns: minmax(380px, .75fr) minmax(0, 1.25fr); background: #0b0a08; }
-.filmstrip { display: grid; grid-template-columns: 1fr; min-height: 760px; }
-.filmstrip img { width: 100%; height: 33.333%; min-height: 250px; object-fit: cover; border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); filter: saturate(.82); }
+.filmstrip { display: grid; grid-template-columns: 1fr; grid-template-rows: repeat(3, minmax(250px, 1fr)); min-height: 760px; }
+.filmstrip img { width: 100%; height: 100%; min-height: 0; object-fit: cover; border-left: 1px solid var(--line); border-bottom: 1px solid var(--line); filter: saturate(.82); }
 
 .novella {
   display: grid;
@@ -218,7 +218,7 @@ footer a { color: var(--gold-bright); }
   .feature-copy, .novella-copy { padding: 70px 24px; }
   .campaign-callout { padding: 26px; }
   .prologue-feature .feature-copy { order: 2; }
-  .filmstrip { order: 1; min-height: auto; grid-template-columns: 1fr 1fr; }
+  .filmstrip { order: 1; min-height: auto; grid-template-columns: 1fr 1fr; grid-template-rows: none; }
   .filmstrip img { height: 280px; min-height: 0; }
   .filmstrip img:last-child { grid-column: 1 / -1; }
   .novella-cover { max-height: 820px; }
@@ -234,7 +234,7 @@ footer a { color: var(--gold-bright); }
   .hero-actions, .inline-actions { align-items: stretch; flex-direction: column; }
   .button { width: 100%; }
   .capabilities li { grid-template-columns: 1fr; gap: 4px; }
-  .filmstrip { grid-template-columns: 1fr; }
+  .filmstrip { grid-template-columns: 1fr; grid-template-rows: none; }
   .filmstrip img, .filmstrip img:last-child { grid-column: auto; height: 225px; }
   .maker-columns { grid-template-columns: 1fr; }
   .pipeline { grid-template-columns: 1fr; }

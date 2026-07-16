@@ -44,9 +44,9 @@ The hosted editor includes a one-click **Demo tomb** map with:
   patrol ranges;
 - zero validation errors or declared technical debt.
 
-## Built with Codex GPT-5.6
+## Built with OpenAI Codex
 
-Kira, powered by Codex GPT-5.6, worked as Eugene's persistent engineering
+Kira, powered by OpenAI Codex, worked as Eugene's persistent engineering
 collaborator rather than as a one-shot code generator. The collaboration covered:
 
 1. auditing a failed engine-first architecture and identifying the painted-art /

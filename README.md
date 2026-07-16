@@ -84,7 +84,7 @@ npm run build
 **Eugene Lyssovsky** is the creator, game and narrative designer, canon owner,
 level author, producer, and final playtest gate.
 
-**Kira, powered by Codex GPT-5.6**, is the persistent engineering collaborator:
+**Kira, powered by OpenAI Codex**, is the persistent engineering collaborator:
 architecture, implementation, integration, visual tooling, technical direction,
 testing, documentation, and release preparation.
 
