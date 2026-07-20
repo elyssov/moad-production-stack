@@ -6,3 +6,12 @@ _site/
 .DS_Store
 *.user
 *.suo
+**/__pycache__/
+*.pyc
+integrations/unreal/generated/
+integrations/unreal/epic-launcher-install.log
+integrations/unreal/MoadHybrid/.vs/
+integrations/unreal/MoadHybrid/Binaries/
+integrations/unreal/MoadHybrid/DerivedDataCache/
+integrations/unreal/MoadHybrid/Intermediate/
+integrations/unreal/MoadHybrid/Saved/

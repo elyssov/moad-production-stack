@@ -1,0 +1,23 @@
+{
+  "FileVersion": 3,
+  "EngineAssociation": "5.8",
+  "Category": "Games",
+  "Description": "MoAD hybrid animation and scene-presentation spike",
+  "Modules": [
+    {
+      "Name": "MoadHybrid",
+      "Type": "Runtime",
+      "LoadingPhase": "Default"
+    }
+  ],
+  "Plugins": [
+    {
+      "Name": "PythonScriptPlugin",
+      "Enabled": true
+    },
+    {
+      "Name": "MoadBridge",
+      "Enabled": true
+    }
+  ]
+}
