@@ -15,3 +15,10 @@ integrations/unreal/MoadHybrid/Binaries/
 integrations/unreal/MoadHybrid/DerivedDataCache/
 integrations/unreal/MoadHybrid/Intermediate/
 integrations/unreal/MoadHybrid/Saved/
+integrations/unreal/MoadHybrid/*.sln
+integrations/unreal/MoadHybrid/*.slnx
+integrations/unreal/MoadHybrid/.vsconfig
+integrations/unreal/MoadHybrid/Config/DefaultInput.ini
+integrations/unreal/MoadHybrid/Plugins/*/Binaries/
+integrations/unreal/MoadHybrid/Plugins/*/Intermediate/
+integrations/unreal/MoadHybrid/Content/Characters/Mannequins/

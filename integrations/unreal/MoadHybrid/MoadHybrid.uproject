@@ -16,6 +16,26 @@
       "Enabled": true
     },
     {
+      "Name": "ModelContextProtocol",
+      "Enabled": true
+    },
+    {
+      "Name": "ToolsetRegistry",
+      "Enabled": true
+    },
+    {
+      "Name": "EditorToolset",
+      "Enabled": true
+    },
+    {
+      "Name": "AnimationAssistantToolset",
+      "Enabled": true
+    },
+    {
+      "Name": "PhysicsToolsets",
+      "Enabled": true
+    },
+    {
       "Name": "MoadBridge",
       "Enabled": true
     }

@@ -47,13 +47,33 @@ Unreal may own skeletal animation, Control Rig, IK, Sequencer, presentation,
 and rendered proof capture. It does not own RURK combat rules, narrative state,
 or level topology. Those remain in the existing runtime and `.moadmap` data.
 
-The next stage is an Unreal 5.8 editor plugin that consumes the generated scene
-contract and creates spline actors, depth-plane roots, the background plane,
-and invariant checks through the official Unreal MCP server.
+## Unreal 5.8 Spike
 
-The initial C++ bridge is already scaffolded under `MoadHybrid/`. Once Unreal
-5.8 is available, generate project files, compile the editor target, open an
-empty level, and call `UMoadSceneImportSubsystem.ImportSceneContract` with the
-absolute path to `moad.unreal-scene.json`.
+The editor target builds against the launcher distribution of Unreal 5.8. It
+enables Epic's official Model Context Protocol server plus the editor,
+animation, and physics toolsets. The project-local Codex endpoint is stored in
+`MoadHybrid/.codex/config.toml`; the server starts automatically on port 8000.
+
+Before opening the map on a new machine, copy Epic's installed Quinn/Manny rig,
+Control Rig, and pistol animation fixtures into the project:
+
+```powershell
+./integrations/unreal/tools/sync_ue_template_content.ps1
+```
+
+The Epic-owned binary assets remain outside Git. The reproducible import script
+creates `/Game/Maps/SemiAbandonedTomb`, imports all authored splines, places a
+rigged Quinn proxy on `near_floor`, assigns the pistol idle pose, and saves the
+level:
+
+```powershell
+& "C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor-Cmd.exe" `
+  ./integrations/unreal/MoadHybrid/MoadHybrid.uproject `
+  -ExecutePythonScript=./integrations/unreal/scripts/import_scene_contract.py `
+  -unattended -nop4 -nosplash
+```
+
+`UMoadSceneImportSubsystem` treats `ContractId` as stable identity and lets
+Unreal assign transient object names, so repeated replace-imports are safe.
 
 See `HYBRID_ARCHITECTURE.md` for ownership boundaries and the proof gate.

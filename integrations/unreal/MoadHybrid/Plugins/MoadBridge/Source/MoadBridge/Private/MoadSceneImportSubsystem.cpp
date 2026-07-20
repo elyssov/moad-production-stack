@@ -133,9 +133,9 @@ FMoadImportResult UMoadSceneImportSubsystem::ImportSceneContract(
             Error = TEXT("Track is missing id, lane, or points");
             return false;
         }
-        FActorSpawnParameters Parameters;
-        Parameters.Name = MakeUniqueObjectName(World, AMoadTrackActor::StaticClass(), *FString::Printf(TEXT("MOAD_%s"), *Id));
-        AMoadTrackActor* Actor = World->SpawnActor<AMoadTrackActor>(AMoadTrackActor::StaticClass(), FTransform::Identity, Parameters);
+        // ContractId is the stable identity. Let Unreal allocate the transient object
+        // name so a replace-import cannot collide with actors pending destruction.
+        AMoadTrackActor* Actor = World->SpawnActor<AMoadTrackActor>(AMoadTrackActor::StaticClass(), FTransform::Identity);
         if (!Actor)
         {
             Error = FString::Printf(TEXT("Could not spawn track %s"), *Id);
