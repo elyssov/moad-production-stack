@@ -58,6 +58,25 @@ collaborator rather than as a one-shot code generator. The collaboration covered
 6. building regression tests, the proof map, the public site, and release gates;
 7. iterating continuously against Eugene's direct playtest and visual feedback.
 
+## Source provenance after submission close
+
+The final obstacle/depth implementation was accidentally pushed to the main
+MoAD development repository instead of this public submission mirror. The code
+and its history were public before the submission closed:
+
+- [`1f08fd1`](https://github.com/elyssov/mystery-of-ancient-darkness/commit/1f08fd13a929b8ba7546996b8f4d009d36e938c2),
+  pushed 2026-07-22 04:35 GMT+7, added authored obstacle depth and the corrected
+  Alice presentation scale;
+- [`ad52e8f`](https://github.com/elyssov/mystery-of-ancient-darkness/commit/ad52e8fe1cc51dc956d9c9d232c0beb47ec8458a),
+  pushed 2026-07-22 04:52 GMT+7, made movement obstacles, lane isolation, and
+  painted occlusion executable and testable.
+
+This repository sync preserves those links rather than rewriting or backdating
+history. A later editor-camera usability repair,
+[`8c6f3f3`](https://github.com/elyssov/mystery-of-ancient-darkness/commit/8c6f3f3),
+is explicitly post-deadline maintenance and is not presented as submission-time
+work.
+
 ## Suggested three-minute demo
 
 1. **0:00–0:20** — show the painted tomb and explain the invisible-collision

@@ -104,6 +104,10 @@ ranges. The editor can export both the complete archive and engine-facing JSON.
 The downloadable Windows alpha remains an evolving investor build. The visual
 editor and its serialization tests are the Build Week developer-tool proof.
 
+The post-submission mirror sync is documented transparently in
+[`BUILD_WEEK.md`](BUILD_WEEK.md), including links and original timestamps for
+the pre-close obstacle/depth commits and a separate label for later maintenance.
+
 ## Rights
 
 Source code is published for Build Week evaluation. Original characters,

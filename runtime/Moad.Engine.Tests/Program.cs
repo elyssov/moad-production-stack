@@ -17,6 +17,8 @@ Assert(world.Enemies.Single(enemy => enemy.Id == "Cultist1") is { MaxHp: 10, Arm
 Assert(world.Enemies.Single(enemy => enemy.Id == "Zombie1").RangedAttack is { Kind: EnemyAttackKind.ThrownStone, Damage: 1 }, "mummy throws a physical stone");
 Assert(world.Enemies.Single(enemy => enemy.Id == "Cultist1").RangedAttack is { Kind: EnemyAttackKind.Fireball, Damage: 2 }, "cult adept casts a visible fireball");
 Assert(world.CombatObstacles.Count == 4, "room loads four art-backed combat obstacles");
+Assert(world.AuthoredObstacles.Count == 0, "legacy room has no editor-authored obstacles");
+Assert(world.AuthoredOccluders.Count == 0, "legacy room has no editor-authored occluders");
 Assert(world.CoverZones.Count == 4, "room loads four art-backed cover zones");
 Assert(world.Objective is { Id: "papyrus", Lane: 2 }, "papyrus objective contract");
 Assert(narrative.Decisions["papyrus_silence"].Choices.Count == 4, "decision contract accepts four authored choices");
@@ -73,6 +75,24 @@ Assert(combatGeometry.CoverLevel(
     new Vec2(2200f, 540f), 0f,
     new Vec2(2385f, 540f), new Vec2(2385f, 580f), 0) == 0,
     "standing inside a broad cover zone does not grant cover before the linked obstacle");
+
+var movementObstacle = new AuthoredObstacle(
+    "test_column",
+    1,
+    [new Vec2(95f, 20f), new Vec2(115f, 20f), new Vec2(115f, 100f), new Vec2(95f, 100f)],
+    0f,
+    2.5f,
+    true,
+    "stone");
+Assert(AuthoredObstacleGeometry.BlocksMovement(
+    [movementObstacle], 1, new Vec2(75f, 100f), new Vec2(100f, 100f), 80f, 8f),
+    "authored movement obstacle blocks an actor entering its polygon on the same depth lane");
+Assert(!AuthoredObstacleGeometry.BlocksMovement(
+    [movementObstacle], 0, new Vec2(75f, 100f), new Vec2(100f, 100f), 80f, 8f),
+    "authored movement obstacle does not block a different depth lane");
+Assert(!AuthoredObstacleGeometry.BlocksMovement(
+    [movementObstacle], 1, new Vec2(125f, 100f), new Vec2(140f, 100f), 80f, 8f),
+    "authored movement obstacle allows motion outside its polygon");
 
 var stopped = combat.ResolveLugerShot(
     new RurkShotContext { ArmourClass = 10 },

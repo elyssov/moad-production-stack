@@ -102,6 +102,23 @@ public sealed record CombatObstacle(
     string Material,
     string VisibleArtContract);
 
+public sealed record AuthoredObstacle(
+    string Id,
+    int Lane,
+    IReadOnlyList<Vec2> Polygon,
+    float HeightMinMeters,
+    float HeightMaxMeters,
+    bool BlocksMovement,
+    string Material);
+
+public sealed record AuthoredOccluder(
+    string Id,
+    int Lane,
+    IReadOnlyList<Vec2> Polygon,
+    float HeightMinMeters,
+    float HeightMaxMeters,
+    float Opacity);
+
 public sealed record CoverZone(
     string Id,
     Rect2 Bounds,
@@ -122,6 +139,8 @@ public sealed class WorldDefinition
     public required List<DepthTransition> Transitions { get; init; }
     public required List<EnemyDefinition> Enemies { get; init; }
     public required List<CombatObstacle> CombatObstacles { get; init; }
+    public List<AuthoredObstacle> AuthoredObstacles { get; init; } = [];
+    public List<AuthoredOccluder> AuthoredOccluders { get; init; } = [];
     public required List<CoverZone> CoverZones { get; init; }
     public required ObjectiveDefinition Objective { get; init; }
 
@@ -243,6 +262,97 @@ public static class WorldLoader
             }
         }
 
+        var authoredObstacles = new List<AuthoredObstacle>();
+        if (root.TryGetProperty("editor_obstacles", out var authoredObstacleItems))
+        {
+            foreach (var item in authoredObstacleItems.EnumerateArray())
+            {
+                var id = item.GetProperty("id").GetString()
+                    ?? throw new InvalidDataException("Authored obstacle has no id");
+                if (combatObstacles.Any(obstacle => obstacle.Id == id))
+                {
+                    throw new InvalidDataException($"Duplicate combat obstacle '{id}'");
+                }
+
+                var lane = laneIds[item.GetProperty("lane").GetString()!];
+                var points = item.GetProperty("polygon").EnumerateArray()
+                    .Select(point => ReadVec(point) + offset)
+                    .ToList();
+                if (points.Count < 3)
+                {
+                    throw new InvalidDataException($"Authored obstacle '{id}' needs at least three points");
+                }
+
+                var heightMin = item.TryGetProperty("height_min_m", out var heightMinValue) ? heightMinValue.GetSingle() : 0f;
+                var heightMax = item.TryGetProperty("height_max_m", out var heightMaxValue) ? heightMaxValue.GetSingle() : heightMin;
+                if (heightMin > heightMax)
+                {
+                    throw new InvalidDataException($"Authored obstacle '{id}' has an inverted height range");
+                }
+                var obstacleMaterial = item.TryGetProperty("material", out var material)
+                    ? material.GetString() ?? "stone"
+                    : "stone";
+                authoredObstacles.Add(new AuthoredObstacle(
+                    id,
+                    lane,
+                    points,
+                    heightMin,
+                    heightMax,
+                    ReadOptionalBoolean(item, "blocks_movement"),
+                    obstacleMaterial));
+
+                var blocks = new HashSet<AttackCollisionKind>();
+                if (ReadOptionalBoolean(item, "blocks_ballistics")) blocks.Add(AttackCollisionKind.InstantBallistic);
+                if (ReadOptionalBoolean(item, "blocks_magic")) blocks.Add(AttackCollisionKind.TravellingMagic);
+                if (ReadOptionalBoolean(item, "blocks_thrown")) blocks.Add(AttackCollisionKind.ThrownPhysical);
+                if (blocks.Count == 0)
+                {
+                    continue;
+                }
+
+                combatObstacles.Add(new CombatObstacle(
+                    id,
+                    BoundsOf(points),
+                    lane,
+                    lane,
+                    blocks,
+                    obstacleMaterial,
+                    $"MoAD Level Editor polygon assigned to depth lane {lane}"));
+            }
+        }
+
+        var authoredOccluders = new List<AuthoredOccluder>();
+        if (root.TryGetProperty("editor_occluders", out var authoredOccluderItems))
+        {
+            foreach (var item in authoredOccluderItems.EnumerateArray())
+            {
+                var id = item.GetProperty("id").GetString()
+                    ?? throw new InvalidDataException("Authored occluder has no id");
+                var lane = laneIds[item.GetProperty("lane").GetString()!];
+                var points = item.GetProperty("polygon").EnumerateArray()
+                    .Select(point => ReadVec(point) + offset)
+                    .ToList();
+                if (points.Count < 3)
+                {
+                    throw new InvalidDataException($"Authored occluder '{id}' needs at least three points");
+                }
+                var heightMin = item.TryGetProperty("height_min_m", out var heightMinValue) ? heightMinValue.GetSingle() : 0f;
+                var heightMax = item.TryGetProperty("height_max_m", out var heightMaxValue) ? heightMaxValue.GetSingle() : heightMin;
+                if (heightMin > heightMax)
+                {
+                    throw new InvalidDataException($"Authored occluder '{id}' has an inverted height range");
+                }
+                var opacity = item.TryGetProperty("opacity", out var opacityValue) ? opacityValue.GetSingle() : 1f;
+                authoredOccluders.Add(new AuthoredOccluder(
+                    id,
+                    lane,
+                    points,
+                    heightMin,
+                    heightMax,
+                    Math.Clamp(opacity, 0f, 1f)));
+            }
+        }
+
         var coverZones = new List<CoverZone>();
         if (root.TryGetProperty("cover_zones", out var coverItems))
         {
@@ -306,6 +416,8 @@ public static class WorldLoader
             Transitions = transitions,
             Enemies = enemies,
             CombatObstacles = combatObstacles,
+            AuthoredObstacles = authoredObstacles,
+            AuthoredOccluders = authoredOccluders,
             CoverZones = coverZones,
             Objective = objective,
         };
@@ -334,6 +446,18 @@ public static class WorldLoader
             values[2].GetSingle(),
             values[3].GetSingle());
     }
+
+    private static Rect2 BoundsOf(IReadOnlyList<Vec2> points)
+    {
+        var left = points.Min(point => point.X);
+        var top = points.Min(point => point.Y);
+        var right = points.Max(point => point.X);
+        var bottom = points.Max(point => point.Y);
+        return new Rect2(left, top, right - left, bottom - top);
+    }
+
+    private static bool ReadOptionalBoolean(JsonElement item, string property) =>
+        item.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.True;
 
     private static AttackCollisionKind ReadAttackCollisionKind(JsonElement value) => value.GetString() switch
     {

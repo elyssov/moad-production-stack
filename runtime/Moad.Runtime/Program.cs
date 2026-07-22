@@ -6,6 +6,7 @@ using Raylib_cs;
 
 const int ScreenWidth = 1280;
 const int ScreenHeight = 720;
+const float HeroPresentationScale = 2f / 3f;
 
 var proofMode = args.Contains("--proof", StringComparer.OrdinalIgnoreCase);
 var devMode = proofMode || args.Contains("--dev", StringComparer.OrdinalIgnoreCase);
@@ -31,8 +32,10 @@ Raylib.SetTargetFPS(60);
 Typography.Load(Path.Combine(contentRoot, "fonts"));
 NarrativeSlides.Load(contentRoot, narrative);
 
-var background = Raylib.LoadTexture(Path.Combine(contentRoot, "backgrounds", "papyrus_archive.png"));
+var backgroundPath = Path.Combine(contentRoot, "backgrounds", "papyrus_archive.png");
+var background = Raylib.LoadTexture(backgroundPath);
 Raylib.SetTextureFilter(background, TextureFilter.Bilinear);
+var occlusionLayers = LoadOcclusionLayers(backgroundPath, world);
 var idle = LoadSequence(Path.Combine(contentRoot, "alice", "idle"), 365f);
 var walk = LoadSequence(Path.Combine(contentRoot, "alice", "walk"), 365f, removeGreenFringe: true);
 var run = LoadSequence(Path.Combine(contentRoot, "alice", "run"), 365f, removeGreenFringe: true);
@@ -145,6 +148,7 @@ while (!Raylib.WindowShouldClose())
         {
             DrawHero(world, simulation, idle, walk, run, jump, shoot, crouch, crouchArmed, balance, animationClock, locomotionDistance, cameraX);
         }
+        DrawOcclusionLayer(occlusionLayers, cameraX, track.Lane);
         DrawCombatOccluders(background, world, cameraX, track.Lane);
         DrawPlayerShotEffect(world, simulation, cameraX, track.Lane);
         DrawWorldImpactEffects(world, simulation, cameraX, track.Lane);
@@ -316,6 +320,7 @@ foreach (var texture in idle.Frames
     Raylib.UnloadTexture(texture);
 }
 Raylib.UnloadTexture(background);
+UnloadOcclusionLayers(occlusionLayers);
 NarrativeSlides.Unload();
 Typography.Unload();
 Raylib.CloseWindow();
@@ -403,6 +408,164 @@ static void DrawCombatOccluders(Texture2D background, WorldDefinition world, flo
     }
 }
 
+static List<DepthOcclusionLayer> LoadOcclusionLayers(string backgroundPath, WorldDefinition world)
+{
+    if (world.AuthoredOccluders.Count == 0)
+    {
+        return [];
+    }
+
+    var backgroundImage = Raylib.LoadImage(backgroundPath);
+    var layers = new List<DepthOcclusionLayer>();
+    try
+    {
+        foreach (var group in world.AuthoredOccluders.GroupBy(item => item.Lane))
+        {
+            var mask = Raylib.GenImageColor(backgroundImage.Width, backgroundImage.Height, Color.Black);
+            try
+            {
+                foreach (var occluder in group)
+                {
+                    var intensity = (byte)Math.Clamp(MathF.Round(occluder.Opacity * 255f), 0f, 255f);
+                    var color = new Color(intensity, intensity, intensity, (byte)255);
+                    var triangles = TriangulatePolygon(occluder.Polygon);
+                    for (var index = 0; index + 2 < triangles.Count; index += 3)
+                    {
+                        Raylib.ImageDrawTriangle(
+                            ref mask,
+                            ToVector(triangles[index]),
+                            ToVector(triangles[index + 1]),
+                            ToVector(triangles[index + 2]),
+                            color);
+                    }
+                }
+
+                var layerImage = Raylib.ImageCopy(backgroundImage);
+                try
+                {
+                    Raylib.ImageAlphaMask(ref layerImage, mask);
+                    var texture = Raylib.LoadTextureFromImage(layerImage);
+                    Raylib.SetTextureFilter(texture, TextureFilter.Bilinear);
+                    layers.Add(new DepthOcclusionLayer(group.Key, texture));
+                }
+                finally
+                {
+                    Raylib.UnloadImage(layerImage);
+                }
+            }
+            finally
+            {
+                Raylib.UnloadImage(mask);
+            }
+        }
+    }
+    finally
+    {
+        Raylib.UnloadImage(backgroundImage);
+    }
+    return layers;
+}
+
+static void DrawOcclusionLayer(IReadOnlyList<DepthOcclusionLayer> layers, float cameraX, int lane)
+{
+    var layer = layers.FirstOrDefault(item => item.Lane == lane);
+    if (layer is null)
+    {
+        return;
+    }
+    DrawBackground(layer.Texture, cameraX);
+}
+
+static void UnloadOcclusionLayers(IEnumerable<DepthOcclusionLayer> layers)
+{
+    foreach (var layer in layers)
+    {
+        Raylib.UnloadTexture(layer.Texture);
+    }
+}
+
+static Vector2 ToVector(Vec2 point) => new(point.X, point.Y);
+
+static List<Vec2> TriangulatePolygon(IReadOnlyList<Vec2> polygon)
+{
+    if (polygon.Count < 3)
+    {
+        return [];
+    }
+
+    var indices = Enumerable.Range(0, polygon.Count).ToList();
+    if (SignedArea(polygon) < 0f)
+    {
+        indices.Reverse();
+    }
+
+    var triangles = new List<Vec2>((polygon.Count - 2) * 3);
+    var guard = polygon.Count * polygon.Count;
+    while (indices.Count > 3 && guard-- > 0)
+    {
+        var clipped = false;
+        for (var index = 0; index < indices.Count; index++)
+        {
+            var previous = indices[(index - 1 + indices.Count) % indices.Count];
+            var current = indices[index];
+            var next = indices[(index + 1) % indices.Count];
+            var a = polygon[previous];
+            var b = polygon[current];
+            var c = polygon[next];
+            if (Cross(a, b, c) <= 0.001f)
+            {
+                continue;
+            }
+            if (indices.Any(candidate => candidate != previous && candidate != current && candidate != next
+                    && PointInTriangle(polygon[candidate], a, b, c)))
+            {
+                continue;
+            }
+
+            triangles.Add(a);
+            triangles.Add(b);
+            triangles.Add(c);
+            indices.RemoveAt(index);
+            clipped = true;
+            break;
+        }
+        if (!clipped)
+        {
+            return [];
+        }
+    }
+
+    if (indices.Count == 3)
+    {
+        triangles.Add(polygon[indices[0]]);
+        triangles.Add(polygon[indices[1]]);
+        triangles.Add(polygon[indices[2]]);
+    }
+    return triangles;
+}
+
+static float SignedArea(IReadOnlyList<Vec2> polygon)
+{
+    var area = 0f;
+    for (var index = 0; index < polygon.Count; index++)
+    {
+        var next = polygon[(index + 1) % polygon.Count];
+        area += polygon[index].X * next.Y - next.X * polygon[index].Y;
+    }
+    return area * 0.5f;
+}
+
+static float Cross(Vec2 a, Vec2 b, Vec2 c) =>
+    (b.X - a.X) * (c.Y - a.Y) - (b.Y - a.Y) * (c.X - a.X);
+
+static bool PointInTriangle(Vec2 point, Vec2 a, Vec2 b, Vec2 c)
+{
+    var ab = Cross(a, b, point);
+    var bc = Cross(b, c, point);
+    var ca = Cross(c, a, point);
+    return ab >= -0.001f && bc >= -0.001f && ca >= -0.001f;
+}
+
 static void DrawHero(
     WorldDefinition world,
     WorldSimulation simulation,
@@ -487,7 +650,7 @@ static void DrawHero(
     }
 
     var frame = sequence.Frames[frameIndex];
-    var physicalHeight = world.PixelsPerMeter * HeroModel.StandingHeightMeters;
+    var physicalHeight = world.PixelsPerMeter * HeroModel.StandingHeightMeters * HeroPresentationScale;
     if (balancing)
     {
         physicalHeight *= 0.96f;
@@ -510,7 +673,7 @@ static void DrawHero(
         && moving
         && shoot.Frames.Count >= 4)
     {
-        DrawWalkingPistol(simulation, shoot, screenX, footY, physicalHeight);
+        DrawWalkingPistol(simulation, shoot, screenX, footY, physicalHeight, HeroPresentationScale);
     }
 }
 
@@ -519,7 +682,8 @@ static void DrawWalkingPistol(
     SpriteClip shoot,
     float screenX,
     float footY,
-    float physicalHeight)
+    float physicalHeight,
+    float presentationScale)
 {
     var frame = shoot.Frames[3];
     var source = simulation.Hero.Facing > 0
@@ -529,8 +693,8 @@ static void DrawWalkingPistol(
     var width = 86f * scale;
     var height = 52f * scale;
     var center = new Vector2(
-        screenX + simulation.Hero.Facing * 36f * simulation.Hero.DisplayScale,
-        footY - 73f * simulation.Hero.DisplayScale);
+        screenX + simulation.Hero.Facing * 36f * simulation.Hero.DisplayScale * presentationScale,
+        footY - 73f * simulation.Hero.DisplayScale * presentationScale);
     var destination = new Rectangle(center.X, center.Y, width, height);
     Raylib.DrawTexturePro(
         frame.Texture,
@@ -1222,6 +1386,8 @@ static void WriteInspection(string stem, WorldDefinition world, WorldSimulation 
         Path.Combine(directory, $"{stem}.json"),
         JsonSerializer.Serialize(snapshot, new JsonSerializerOptions { WriteIndented = true }));
 }
+
+sealed record DepthOcclusionLayer(int Lane, Texture2D Texture);
 
 static class Typography
 {

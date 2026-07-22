@@ -459,6 +459,20 @@ public sealed class WorldSimulation
             Math.Clamp(previous.X + Hero.Velocity.X * delta, 0f, world.Size.X),
             previous.Y);
 
+        var actorHeight = world.PixelsPerMeter * HeroModel.StandingHeightMeters;
+        var actorHalfWidth = MathF.Max(8f, world.PixelsPerMeter * 0.16f);
+        if (AuthoredObstacleGeometry.BlocksMovement(
+                world.AuthoredObstacles,
+                Hero.Lane,
+                previous,
+                next,
+                actorHeight,
+                actorHalfWidth))
+        {
+            next = previous;
+            Hero.Velocity = new Vec2(0f, Hero.Velocity.Y);
+        }
+
         if (Hero.Grounded)
         {
             var ground = supports.FindNear(Hero.Lane, next.X, previous.Y, 36f);
